@@ -1,0 +1,7 @@
+imap_tools
+fastapi
+openai-agents
+SQLAlchemy
+psycopg2-binary
+PyPDF2
+dotenv
