@@ -20,7 +20,6 @@ def check_car_manual(query:str) -> str:
         chunk_text = normalize(chunk)
         if any(word in chunk_text for word in query.split()):
             return f"""Issue found in car manual : {chunk}"""
-    print(f"check_car_manual relevant = {relevant} ")
     return relevant or "Sorry, I could not find the information in the manual."
 
 @function_tool
