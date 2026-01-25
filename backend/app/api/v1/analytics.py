@@ -14,3 +14,19 @@ async def ticketsPerDay(db:AsyncSession = Depends(get_db)):
         return await service.get_tickets_per_day(db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/status")
+async def ticketsPerStatus(db:AsyncSession = Depends(get_db)):
+    try:
+        service = TicketService()
+        return await service.get_tickets_by_status(db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/priority")
+async def ticketsPerDay(db:AsyncSession = Depends(get_db)):
+    try:
+        service = TicketService()
+        return await service.get_tickets_by_priority(db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

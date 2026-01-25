@@ -52,3 +52,25 @@ class TicketRepository:
                 )
         result = await db.execute(query)
         return result.mappings().all()
+    
+    async def get_tickets_by_status(self,db:AsyncSession):
+        query = (
+                 select(Ticket.status.label('status'),
+                        func.count(Ticket.id).label('count')
+                     )
+                    .group_by(Ticket.status)
+                    .order_by(func.count(Ticket.id).desc())
+                )
+        result = await db.execute(query)
+        return result.mappings().all()
+    
+    async def get_tickets_by_priority(self,db:AsyncSession):
+        query = (
+                 select(Ticket.priority.label('priority'),
+                        func.count(Ticket.id).label('count')
+                     )
+                    .group_by(Ticket.priority)
+                    .order_by(func.count(Ticket.id).desc())
+                )
+        result = await db.execute(query)
+        return result.mappings().all()

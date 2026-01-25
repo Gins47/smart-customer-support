@@ -39,3 +39,8 @@ class TicketService:
     async def get_tickets_per_day(self,db:AsyncSession):
         return await self.repo.get_tickets_per_day(db)
 
+    async def get_tickets_by_status(self,db:AsyncSession):
+        return await self.repo.get_tickets_by_status(db)
+
+    async def get_tickets_by_priority(self,db:AsyncSession):
+        return await self.repo.get_tickets_by_priority(db)

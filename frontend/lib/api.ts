@@ -61,3 +61,15 @@ export async function updateTicketStatus(ticket_id: number, status: string) {
 
   return res.json();
 }
+
+export async function getTicketsPerDay() {
+  const res = await fetch(`${API_BASE_URL}/api/v1/analytics`, {
+    cache: "no-store", // always fresh data
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch tickets");
+  }
+
+  return res.json();
+}
