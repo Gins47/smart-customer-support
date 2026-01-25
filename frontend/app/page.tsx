@@ -1,10 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TicketsPerDayChart from "@/components/dashboard/tickets-per-day-chart";
-import { getTicketsPerDay } from "@/lib/api";
+import { getTicketsPerDay, getTicketsByPriority } from "@/lib/api";
+import TicketPriorityPieChart from "@/components/dashboard/ticket-priority-pie-chart";
 
 
 export default async function DashboardPage() {
   const  perDay = await getTicketsPerDay();
+  const byPriority = await getTicketsByPriority()
 
   return (
     <div className="space-y-6">
@@ -20,14 +22,14 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* <Card>
+        <Card>
           <CardHeader>
             <CardTitle>Ticket Priority</CardTitle>
           </CardHeader>
           <CardContent>
             <TicketPriorityPieChart data={byPriority} />
           </CardContent>
-        </Card> */}
+        </Card>
       </div>
     </div>
   );

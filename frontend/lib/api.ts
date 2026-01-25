@@ -73,3 +73,15 @@ export async function getTicketsPerDay() {
 
   return res.json();
 }
+
+export async function getTicketsByPriority() {
+  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/priority`, {
+    cache: "no-store", // always fresh data
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch tickets");
+  }
+
+  return res.json();
+}
