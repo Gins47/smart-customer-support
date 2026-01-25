@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.ticket_repository import TicketRepository
 from app.models.ticket import Ticket
+from app.types.ticket_update import TicketUpdateRequest
 
 class TicketService:
 
@@ -28,4 +29,13 @@ class TicketService:
     async def list_tickets(self,db:AsyncSession):
         return await self.repo.get_all(db)
     
+    async def get_ticket_by_id(self,db:AsyncSession,ticket_id):
+        return await self.repo.get_ticket_by_id(db,ticket_id)
+    
+    async def update_draft_ticket(self,db:AsyncSession,ticket_id,payload:TicketUpdateRequest):
+        return await self.repo.update_draft_ticket(db,ticket_id,payload)
+    
+
+    async def get_tickets_per_day(self,db:AsyncSession):
+        return await self.repo.get_tickets_per_day(db)
 

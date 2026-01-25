@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.db.base import Base
 from app.db.session import engine, SessionLocal
 from app.api.v1 import api_router
@@ -19,6 +20,17 @@ async def lifespan(app:FastAPI):
 
 
 app = FastAPI(title="Support AI agent",lifespan=lifespan)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",  # Next.js
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],        # GET, POST, PUT, DELETE, OPTIONS
+    allow_headers=["*"],        # Authorization, Content-Type, etc
+)
 
 @app.get("/")
 async def root():
