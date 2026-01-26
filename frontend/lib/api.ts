@@ -85,3 +85,15 @@ export async function getTicketsByPriority() {
 
   return res.json();
 }
+
+export async function getTicketsByStatus() {
+  const res = await fetch(`${API_BASE_URL}/api/v1/analytics/status`, {
+    cache: "no-store", // always fresh data
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch tickets");
+  }
+
+  return res.json();
+}

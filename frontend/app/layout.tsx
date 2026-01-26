@@ -1,4 +1,5 @@
 import "./globals.css";
+import Link from "next/link";
 
 export default function RootLayout({
   children,
@@ -11,7 +12,9 @@ export default function RootLayout({
         <div className="flex h-screen">
           {/* Sidebar */}
           <aside className="w-64 bg-slate-900 text-white p-4">
-            <h2 className="text-xl font-bold mb-6">🚗 Car Support</h2>
+            <Link href="/" className="block mb-6">
+             <h2 className="text-xl font-bold mb-6 hover:opacity-80 cursor-pointer">🚗 Car Support</h2>
+            </Link>
 
             <nav className="space-y-2">
               <a

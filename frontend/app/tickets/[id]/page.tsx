@@ -29,7 +29,7 @@ export default async function TicketDetailsPage({
       </div>
 
       <div className="text-sm">
-        <span className="text-l font-bold">Summary :</span> {ticket.summary}
+        <span className="text-l font-bold">AI Summary :</span> {ticket.summary}
       </div>
 
       <TicketEditor ticket={ticket} />
