@@ -1,7 +1,8 @@
 import os
 from typing import List, Dict
 from imap_tools import AND, MailBox
-import asyncio
+import smtplib
+from email.message import EmailMessage
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.agents.orchestrator import run_orchestrator_agent
 from app.core.config import settings
@@ -45,3 +46,30 @@ class EmailFetcher:
 
         print(f"Saving tickets to database = {response}")
         return await self.ticket_service.create_ticket(db,response)
+
+class EmailSender:
+    def __init__(self):
+        self.smtp_server = "smtp.gmail.com"
+        self.smtp_port = 587
+        self.user = settings.EMAIL_USER
+        self.password = settings.EMAIL_PASSWORD
+
+        if not self.user or not self.password:
+            raise RuntimeError("EMAIL_USER or EMAIL_PASSWORD is not set")
+
+    def send_email(
+        self,
+        to_email: str,
+        subject: str,
+        body: str,
+    ) -> None:
+        msg = EmailMessage()
+        msg["From"] = self.user
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.set_content(body)
+
+        with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+            server.starttls()
+            server.login(self.user, self.password)
+            server.send_message(msg)
