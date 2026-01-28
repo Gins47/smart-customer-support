@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
 from app.services.ticket_service import TicketService
-from app.types.ticket_update import TicketUpdateRequest
+from app.types.ticket import TicketUpdateRequest
 
 router = APIRouter(prefix="/analytics",tags=["analytics"])
 

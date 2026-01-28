@@ -1,14 +1,16 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.ticket_repository import TicketRepository
 from app.models.ticket import Ticket
-from app.types.ticket_update import TicketUpdateRequest
+from app.types.ticket import TicketUpdateRequest
+from app.integrations.email import EmailHandler
 
 class TicketService:
 
     def __init__(self):
         self.repo = TicketRepository()
+        self.email_handler = EmailHandler()
 
-    async def create_ticket(self,db:AsyncSession, ticket_list: list):
+    async def bulk_create_ticket(self,db:AsyncSession, ticket_list: list):
         ticket_creation_list = []
         for ticket in ticket_list:
 
@@ -33,9 +35,17 @@ class TicketService:
         return await self.repo.get_ticket_by_id(db,ticket_id)
     
     async def update_draft_ticket(self,db:AsyncSession,ticket_id,payload:TicketUpdateRequest):
-        return await self.repo.update_draft_ticket(db,ticket_id,payload)
+        result = await self.repo.update_draft_ticket(db,ticket_id,payload)
+        print(f"Ticket Approved {result}")
+        if result and result.status == "APPROVED":
+            self.email_handler.send_email(
+                result.from_email,
+                "RE: "+result.ticket_number + " - "+result.subject,
+                result.draft_response
+            )
+            
+        return result
     
-
     async def get_tickets_per_day(self,db:AsyncSession):
         return await self.repo.get_tickets_per_day(db)
 

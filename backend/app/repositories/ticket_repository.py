@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.ticket import Ticket
 from sqlalchemy import select, update, func
 
-from app.types.ticket_update import TicketUpdateRequest
+from app.types.ticket import TicketUpdateRequest
 
 
 class TicketRepository:

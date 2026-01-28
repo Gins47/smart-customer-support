@@ -15,7 +15,7 @@ type Props = {
   }[];
 };
 
-const COLORS = ["#cf5446", "#4097e8", "#3aad64"];
+const COLORS = ["#de230e", "#0084ff", "#07e357"];
 
 export default function TicketStatusPieChart({ data }: Props) {
   return (

@@ -1,25 +1,23 @@
-import os
-from typing import List, Dict
 from imap_tools import AND, MailBox
 import smtplib
 from email.message import EmailMessage
-from sqlalchemy.ext.asyncio import AsyncSession
 from app.agents.orchestrator import run_orchestrator_agent
 from app.core.config import settings
-from app.services.ticket_service import TicketService
+from app.types.ticket import TicketCreateRequest
 
 
-class EmailFetcher:
+class EmailHandler:
     def __init__(self):
         self.server = "imap.gmail.com"
         self.user = settings.EMAIL_USER
+        self.smtp_server = "smtp.gmail.com"
+        self.smtp_port = 587
         self.password = settings.EMAIL_PASSWORD
-        self.ticket_service = TicketService()
 
         if not self.user or not self.password:
             raise RuntimeError("EMAIL_USER or PASSWORD is not set")
 
-    async def fetchUserEmail(self, db:AsyncSession, limit=10):
+    async def fetchUserEmail(self, limit=10):
         """
         Fetches unread email from Gmail account
 
@@ -43,21 +41,9 @@ class EmailFetcher:
                     "ticket_number": agent_output.ticket_number,
                     "draft_response": agent_output.draft_response,
                 })
-
-        print(f"Saving tickets to database = {response}")
-        return await self.ticket_service.create_ticket(db,response)
-
-class EmailSender:
-    def __init__(self):
-        self.smtp_server = "smtp.gmail.com"
-        self.smtp_port = 587
-        self.user = settings.EMAIL_USER
-        self.password = settings.EMAIL_PASSWORD
-
-        if not self.user or not self.password:
-            raise RuntimeError("EMAIL_USER or EMAIL_PASSWORD is not set")
-
-    def send_email(
+        return response
+    
+    async def send_email(
         self,
         to_email: str,
         subject: str,
@@ -72,4 +58,18 @@ class EmailSender:
         with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
             server.starttls()
             server.login(self.user, self.password)
-            server.send_message(msg)
+            server.send_message(msg) 
+    
+    async def process_email(self, payload:TicketCreateRequest):
+        response = []
+        agent_output = await run_orchestrator_agent(payload.email or "")
+        print(f" agent response = {agent_output}")
+        response.append({
+                    "from_email": payload.from_email,
+                    "subject": payload.subject,
+                    "priority": agent_output.priority,
+                    "summary": agent_output.summary,
+                    "ticket_number": agent_output.ticket_number,
+                    "draft_response": agent_output.draft_response,
+                })
+        return response
